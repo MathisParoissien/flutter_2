@@ -1,7 +1,7 @@
 import 'package:Cook/screens/detail_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:Cook/network/api.dart';
+import 'package:Cook/model/recipes_list.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -33,7 +33,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    futureRecipes = fetchRecipes();
+    // futureRecipes = fetchRecipes();
   }
 
   @override
@@ -167,10 +167,12 @@ class _HomeScreenState extends State<HomeScreen> {
                       shrinkWrap: true,
                       itemBuilder: (context, index) {
                         return GestureDetector(
-                          onTap: (){
-                            Navigator.push(context, MaterialPageRoute(
-                              builder: (context) => DetailScreen(images[4 - index])
-                            ));
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        DetailScreen(images[4 - index])));
                           },
                           child: AspectRatio(
                               aspectRatio: 0.9 / 1,
@@ -187,7 +189,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                             images[4 - index],
                                             fit: BoxFit.cover,
                                           ),
-                                          borderRadius: BorderRadius.circular(30),
+                                          borderRadius:
+                                              BorderRadius.circular(30),
                                         ),
                                       ),
                                       tag: images[4 - index],
@@ -218,7 +221,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                     child: Text(
                                       "Recipe by Sarah Ahmed",
                                       style: GoogleFonts.roboto(
-                                          color: Colors.grey[600], fontSize: 11),
+                                          color: Colors.grey[600],
+                                          fontSize: 11),
                                     ),
                                   )
                                 ],
