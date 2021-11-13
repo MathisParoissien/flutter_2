@@ -21,16 +21,19 @@ class Recipes {
   final String name;
   final String id;
   final String image;
+  final String description;
 
   Recipes({
     required this.name,
     required this.id,
     required this.image,
+    required this.description,
   });
 
   factory Recipes.fromJson(Map<String, dynamic> json) => Recipes(
         name: json['name'],
         id: json['id'],
         image: json['image'],
+        description: json['description'],
       );
 }

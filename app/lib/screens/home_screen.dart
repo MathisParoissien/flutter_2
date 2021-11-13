@@ -38,7 +38,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    ///For screen size
     final size = MediaQuery.of(context).size;
     return Scaffold(
       bottomNavigationBar: BottomNavigationBar(
@@ -67,7 +66,6 @@ class _HomeScreenState extends State<HomeScreen> {
           child: SingleChildScrollView(
             child: Column(
               children: <Widget>[
-                ///Container for Header
                 Container(
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -78,8 +76,6 @@ class _HomeScreenState extends State<HomeScreen> {
                           style: GoogleFonts.playfairDisplay(fontSize: 30),
                         ),
                       ),
-
-                      ///For spacing
                       SizedBox(
                         width: 50,
                       ),
@@ -96,8 +92,6 @@ class _HomeScreenState extends State<HomeScreen> {
                     ],
                   ),
                 ),
-
-                ///For vertical Spacing
                 SizedBox(
                   height: 32,
                 ),
@@ -112,8 +106,6 @@ class _HomeScreenState extends State<HomeScreen> {
                       itemBuilder: (context, index) {
                         return AspectRatio(
                             aspectRatio: 0.9 / 1,
-
-                            ///Width : screen,
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: <Widget>[
@@ -128,14 +120,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                     ),
                                   ),
                                 ),
-
-                                ///Add Text Also,
                                 SizedBox(
                                   height: 8,
                                 ),
-
-                                ///For spacing
-
                                 Padding(
                                   padding: const EdgeInsets.symmetric(
                                       horizontal: 16.0),
@@ -153,13 +140,9 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                       itemCount: 4),
                 ),
-
-                ///For vertical spacing
                 SizedBox(
                   height: 32,
                 ),
-
-                ///For quick recipe list
                 Container(
                   height: size.height * 0.4,
                   child: ListView.separated(
@@ -176,8 +159,6 @@ class _HomeScreenState extends State<HomeScreen> {
                           },
                           child: AspectRatio(
                               aspectRatio: 0.9 / 1,
-
-                              ///Width : screen,
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: <Widget>[
@@ -196,14 +177,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                       tag: images[4 - index],
                                     ),
                                   ),
-
-                                  ///Add Text Also,
                                   SizedBox(
                                     height: 8,
                                   ),
-
-                                  ///For spacing
-
                                   Padding(
                                     padding: const EdgeInsets.symmetric(
                                         horizontal: 16.0),
