@@ -1,5 +1,8 @@
+import 'package:Cook/bloc/recipes/bloc.dart';
+import 'package:Cook/bloc/recipes/states.dart';
 import 'package:Cook/screens/detail_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:Cook/model/recipes_list.dart';
 
@@ -9,6 +12,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  //late Future<List<Recipes>> futureRecipes;
   int selectedIndex = 0;
 
   ///Image paths and food names
@@ -28,38 +32,18 @@ class _HomeScreenState extends State<HomeScreen> {
     "Pizza"
   ];
 
-  late Future<Recipes> futureRecipes;
-
   @override
   void initState() {
     super.initState();
-    // futureRecipes = fetchRecipes();
+    //futureRecipes = fetchRecipes();
   }
 
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    return Scaffold(
-      bottomNavigationBar: BottomNavigationBar(
-        items: [
-          BottomNavigationBarItem(icon: Icon(Icons.home), title: Text("Home")),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.fastfood), title: Text("Recipes")),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.subscriptions), title: Text("Subscription")),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.settings), title: Text("Settings")),
-        ],
-        iconSize: 30,
-        currentIndex: selectedIndex,
-        onTap: (index) {
-          setState(() {
-            selectedIndex = index;
-          });
-        },
-        type: BottomNavigationBarType.fixed,
-      ),
-      body: SafeArea(
+
+    List<Widget> _pages = <Widget>[
+      SafeArea(
         child: Container(
           width: double.infinity,
           padding: const EdgeInsets.all(16),
@@ -215,6 +199,92 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
       ),
+      SafeArea(
+          child: Container(
+        width: double.infinity,
+              child: Column(
+                  children: [(BlocBuilder<RecipesBloc, RecipesState>(
+                      builder: (BuildContext context, RecipesState state) {
+                        if (state is RecipesListError) {
+                          final error = state.error;
+                          return Text(error.message);
+                        }
+                        if (state is RecipesLoaded) {
+                          List<Recipes> recipes = state.recipes;
+                          return _list(recipes);
+                        }
+                        return CircularProgressIndicator();
+                      }))])
+      )),
+      SafeArea(
+          child: Container(
+        width: double.infinity,
+      )),
+      SafeArea(
+          child: Container(
+            width: double.infinity,
+          )),
+    ];
+
+    return Scaffold(
+      body: SafeArea(
+        child: _pages.elementAt(selectedIndex), //New
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        items: [
+          BottomNavigationBarItem(icon: Icon(Icons.home), title: Text("Home")),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.fastfood), title: Text("Recipes")),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.subscriptions), title: Text("Subscription")),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.settings), title: Text("Settings")),
+        ],
+        iconSize: 30,
+        currentIndex: selectedIndex,
+        onTap: (index) {
+          setState(() {
+            selectedIndex = index;
+          });
+        },
+        type: BottomNavigationBarType.fixed,
+      ),
     );
   }
+}
+
+
+
+class ListRow extends StatelessWidget {
+  //
+  final Recipes ?recipe;
+  ListRow({this.recipe});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.all(20.0),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          if (recipe!.name != null)
+            Text(recipe!.name!),
+          Divider(),
+        ],
+      ),
+    );
+  }
+}
+
+Widget _list(List<Recipes> recipes) {
+  return Expanded(
+    child: ListView.builder(
+      itemCount: recipes.length,
+      itemBuilder: (_, index) {
+        Recipes _recipes = recipes[index];
+        return ListRow(recipe: _recipes);
+      },
+    ),
+  );
 }

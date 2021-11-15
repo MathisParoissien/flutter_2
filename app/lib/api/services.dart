@@ -5,6 +5,8 @@ import 'package:http/http.dart';
 import 'dart:async';
 import 'dart:convert';
 
+import 'dart:math';
+
 abstract class RecipesRepo {
   Future<List<Recipes>> getRecipesList();
 }
@@ -18,7 +20,11 @@ class RecipesService implements RecipesRepo {
     Uri uri = Uri.https(_baseUrl, _GET_RECIPES);
     Response response =
         await http.get(Uri.parse('http://10.0.2.2:3000/recipes'));
-    List<Recipes> recipes = recipesFromJson(response.body);
-    return recipes;
+    if (response.statusCode == 200) {
+      List<Recipes> recipes = recipesFromJson(response.body);
+      return recipes;
+    } else {
+      throw Exception('Failed to load recipes');
+    }
   }
 }

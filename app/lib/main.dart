@@ -50,27 +50,8 @@ class TestScreenState extends State<TestScreen> {
   //
   @override
   Widget build(BuildContext context) {
-    return Scaffold(body: BlocBuilder<RecipesBloc, RecipesState>(
-        builder: (BuildContext context, RecipesState state) {
-      if (state is RecipesListError) {
-        final error = state.error;
-        return Text(error.message);
-      }
-      if (state is RecipesLoaded) {
-        List<Recipes> recipes = state.recipes;
-        return HomeScreen();
-      }
-      return CircularProgressIndicator();
-    }));
-  }
-
-  Widget _list(List<Recipes> recipes) {
-    return Expanded(
-        child: ListView.builder(
-            itemCount: recipes.length,
-            itemBuilder: (_, index) {
-              Recipes recipe = recipes[index];
-              return Text(recipe.name);
-            }));
+    return Scaffold(
+      body: HomeScreen()
+    );
   }
 }
