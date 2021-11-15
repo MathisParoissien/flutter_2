@@ -1,6 +1,219 @@
 // @dart=2.9
+import 'package:Cook/model/recipes_list.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:url_launcher/url_launcher.dart';
+
+
+class DetailRecipes extends StatelessWidget {
+  final Recipes recipe;
+
+  DetailRecipes({this.recipe});
+  @override
+  Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+
+    return Scaffold(
+      body: Container(
+        width: double.infinity,
+        height: double.infinity,
+        child: Stack(
+          children: <Widget>[
+            ///First show the image in background
+            Hero(
+              child: Container(
+                height: size.height * 0.55,
+                child: Image.network(
+                  recipe.image,
+                  fit: BoxFit.cover,
+                ),
+              ),
+              tag: recipe.image,
+            ),
+
+            ///Container for more content
+            DraggableScrollableSheet(
+              maxChildSize: 1,
+              initialChildSize: 0.6,
+              minChildSize: 0.6,
+              builder: (context, controller) {
+                return SingleChildScrollView(
+                  controller: controller,
+                  child: Container(
+                    padding: const EdgeInsets.all(24),
+                    decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(40),
+                            topRight: Radius.circular(40))),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Row(
+                          children: <Widget>[
+                       Expanded(
+                      flex: 1,
+                      child: SingleChildScrollView(
+                        scrollDirection: Axis.vertical,
+                            child : Text(
+                              recipe.name,
+                              style: GoogleFonts.roboto(
+                                  fontSize: 22, fontWeight: FontWeight.bold),
+                            ),
+                      )
+                       ),
+                            Spacer(),
+                            IconButton(
+                              icon: Icon(Icons.favorite),
+                              color: Colors.redAccent,
+                              iconSize: 30,
+                              onPressed: () {},
+                            )
+                          ],
+                        ),
+                        Text(
+                          recipe.description,
+                          style: GoogleFonts.roboto(
+                            fontWeight: FontWeight.w300,
+                          ),
+                        ),
+                        SizedBox(
+                          height: 4,
+                        ),
+                        Row(
+                          children: <Widget>[
+                            Icon(
+                              Icons.star,
+                              color: Colors.orange,
+                              size: 15,
+                            ),
+                            Icon(
+                              Icons.star,
+                              color: Colors.orange,
+                              size: 15,
+                            ),
+                            Icon(
+                              Icons.star,
+                              color: Colors.orange,
+                              size: 15,
+                            ),
+                            Icon(
+                              Icons.star,
+                              color: Colors.orange,
+                              size: 15,
+                            ),
+                            Icon(
+                              Icons.star,
+                              color: Colors.grey[400],
+                              size: 15,
+                            ),
+                          ],
+                        ),
+
+                        SizedBox(
+                          height: 24,
+                        ),
+
+                        ///Container for food information
+                        Container(
+                          child: Row(
+                            children: <Widget>[
+                              Expanded(
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(10),
+                                      border:
+                                          Border.all(color: Colors.grey[200])),
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 16),
+                                  child: Column(
+                                    children: <Widget>[
+                                      Text(
+                                        "Ingredients",
+                                        style: GoogleFonts.roboto(
+                                            color: Colors.grey),
+                                      ),
+                                      Text(
+                                        recipe.ingredient.length.toString(),
+                                        style: GoogleFonts.roboto(
+                                            color: Colors.grey[900],
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+
+                        SizedBox(
+                          height: 24,
+                        ),
+
+                        Text(
+                          "Ingredients",
+                          style: GoogleFonts.roboto(
+                              fontSize: 20, fontWeight: FontWeight.bold),
+                        ),
+
+                    Column(
+                      children: <Widget>[
+                        ListView.builder(
+                          padding: EdgeInsets.only(top: 10),
+                          shrinkWrap: true,
+                          physics: const ClampingScrollPhysics(),
+                          itemCount: recipe.ingredient.length,
+                          itemBuilder: (context, index) {
+                            var ingredients = recipe.ingredient;
+                            return Text(ingredients[index].amount != null ? ingredients[index].amount + (ingredients[index].unit ?? "")  + " " + ingredients[index].name : "");
+                          },
+                        )
+                      ],
+                    ),
+                        SizedBox(
+                          height: 24,
+                        ),
+
+                        Text(
+                          "Cooking Method",
+                          style: GoogleFonts.roboto(
+                              fontSize: 20, fontWeight: FontWeight.bold),
+                        ),
+                        Column(
+                          children: <Widget>[
+                            ListView.builder(
+                              shrinkWrap: true,
+                              physics: const ClampingScrollPhysics(),
+                              padding: EdgeInsets.only(top: 10),
+                              itemCount: recipe.step.length,
+                              itemBuilder: (context, index) {
+                                var steps = recipe.step;
+                                return MarkdownBody(
+                                  data: steps[index].description,
+                                  onTapLink: (text, url, title){
+                                    launch(url);
+                                  },
+                                );
+                              },
+                            )
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              },
+            )
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+
 
 class DetailScreen extends StatelessWidget {
   final image;
@@ -117,9 +330,9 @@ class DetailScreen extends StatelessWidget {
                                   decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(10),
                                       border:
-                                          Border.all(color: Colors.grey[200])),
+                                      Border.all(color: Colors.grey[200])),
                                   padding:
-                                      const EdgeInsets.symmetric(vertical: 16),
+                                  const EdgeInsets.symmetric(vertical: 16),
                                   child: Column(
                                     children: <Widget>[
                                       Text(
@@ -145,9 +358,9 @@ class DetailScreen extends StatelessWidget {
                                   decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(10),
                                       border:
-                                          Border.all(color: Colors.grey[200])),
+                                      Border.all(color: Colors.grey[200])),
                                   padding:
-                                      const EdgeInsets.symmetric(vertical: 16),
+                                  const EdgeInsets.symmetric(vertical: 16),
                                   child: Column(
                                     children: <Widget>[
                                       Text(
@@ -173,9 +386,9 @@ class DetailScreen extends StatelessWidget {
                                   decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(10),
                                       border:
-                                          Border.all(color: Colors.grey[200])),
+                                      Border.all(color: Colors.grey[200])),
                                   padding:
-                                      const EdgeInsets.symmetric(vertical: 16),
+                                  const EdgeInsets.symmetric(vertical: 16),
                                   child: Column(
                                     children: <Widget>[
                                       Text(

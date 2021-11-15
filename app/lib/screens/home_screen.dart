@@ -12,7 +12,6 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  //late Future<List<Recipes>> futureRecipes;
   int selectedIndex = 0;
 
   ///Image paths and food names
@@ -35,7 +34,77 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    //futureRecipes = fetchRecipes();
+  }
+
+  Widget _list(List<Recipes> recipes) {
+    return Expanded(
+      child: ListView.builder(
+        itemCount: recipes.length,
+        itemBuilder: (_, index) {
+          Recipes _recipes = recipes[index];
+          var tags = recipes[index].tag;
+          return GestureDetector(
+            onTap: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) =>
+                          DetailRecipes(recipe: _recipes)));
+            },
+            child: AspectRatio(
+                aspectRatio: 0.9 / 1,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    Expanded(
+                      child: Hero(
+                        child: Container(
+                          child: ClipRRect(
+                            child: Image.network(
+                              _recipes.image!,
+                              fit: BoxFit.cover,
+                            ),
+                            borderRadius:
+                            BorderRadius.circular(30),
+                          ),
+                        ),
+                        tag: _recipes.image!,
+                      ),
+                    ),
+                    SizedBox(
+                      height: 8,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16.0),
+                      child: Text(
+                        _recipes.name!,
+                        style: GoogleFonts.roboto(
+                            color: Colors.grey[800],
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16.0),
+                      child: Text(
+                        tags!.isNotEmpty ?
+                        _recipes.tag!.join(", ") : "",
+                        style: GoogleFonts.roboto(
+                            color: Colors.grey[600],
+                            fontSize: 11),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 8,
+                    ),
+                  ],
+                )),
+          );
+        },
+      ),
+    );
   }
 
   @override
@@ -251,40 +320,4 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     );
   }
-}
-
-
-
-class ListRow extends StatelessWidget {
-  //
-  final Recipes ?recipe;
-  ListRow({this.recipe});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.all(20.0),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          if (recipe!.name != null)
-            Text(recipe!.name!),
-          Divider(),
-        ],
-      ),
-    );
-  }
-}
-
-Widget _list(List<Recipes> recipes) {
-  return Expanded(
-    child: ListView.builder(
-      itemCount: recipes.length,
-      itemBuilder: (_, index) {
-        Recipes _recipes = recipes[index];
-        return ListRow(recipe: _recipes);
-      },
-    ),
-  );
 }
