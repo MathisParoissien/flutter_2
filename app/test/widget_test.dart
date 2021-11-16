@@ -5,26 +5,89 @@
 // gestures. You can also use WidgetTester to find child widgets in the widget
 // tree, read text, and verify that the values of widget properties are correct.
 
+import 'package:Cook/api/services.dart';
+import 'package:Cook/model/recipes_list.dart';
+import 'package:Cook/screens/detail_screen.dart';
+import 'package:Cook/screens/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:Cook/main.dart';
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp());
+  test('Initialize with empty', () async {
+    var mockRepo = MockRecipesRepo();
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
-
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
-
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+    var list = mockRepo.getRecipesList();
+    expect(list, <Recipes>[]);
   });
+
+  testWidgets('home Has Title Screen', (WidgetTester tester) async {
+    await tester.pumpWidget(HomeScreen());
+
+    final titleFinder = find.text('Looking for your favorite meal');
+
+    expect(titleFinder, findsOneWidget);
+  });
+
+  testWidgets('detailed Screen', (WidgetTester tester) async {
+    await tester.pumpWidget(DetailRecipes());
+
+    final ingFinder = find.text('Ingredients');
+
+    expect(ingFinder, findsOneWidget);
+  });
+}
+
+var mockRecipes = <Recipes>[
+  Recipes(
+      name: "test1",
+      id: "1",
+      description: "test etsts ",
+      tag: ["1", "2"],
+      image: "",
+      ingredient: [],
+      ingredientGroup: [],
+      step: [],
+      notes: " notes ",
+      forked: "forked"),
+  Recipes(
+      name: "test1",
+      id: "2",
+      description: "test etsts ",
+      tag: ["1", "2"],
+      image: "",
+      ingredient: [],
+      ingredientGroup: [],
+      step: [],
+      notes: " notes ",
+      forked: "forked"),
+  Recipes(
+      name: "test1",
+      id: "3",
+      description: "test etsts ",
+      tag: ["1", "2"],
+      image: "",
+      ingredient: [],
+      ingredientGroup: [],
+      step: [],
+      notes: " notes ",
+      forked: "forked"),
+  Recipes(
+      name: "test1",
+      id: "4",
+      description: "test etsts ",
+      tag: ["1", "2"],
+      image: "",
+      ingredient: [],
+      ingredientGroup: [],
+      step: [],
+      notes: " notes ",
+      forked: "forked")
+];
+
+class MockRecipesRepo implements RecipesRepo {
+  @override
+  Future<List<Recipes>> getRecipesList() async =>
+      Future.delayed(const Duration(seconds: 2), () => [...mockRecipes]);
 }

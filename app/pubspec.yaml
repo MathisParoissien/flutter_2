@@ -36,6 +36,7 @@ dependencies:
   equatable: ^2.0.3
   flutter_markdown: ^0.6.8
   url_launcher: ^6.0.12
+  mockito:
 
 dev_dependencies:
   flutter_test:

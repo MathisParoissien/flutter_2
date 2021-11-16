@@ -3,6 +3,7 @@ import 'package:Cook/bloc/recipes/bloc.dart';
 import 'package:Cook/bloc/recipes/events.dart';
 import 'package:Cook/bloc/recipes/states.dart';
 import 'package:Cook/model/recipes_list.dart';
+import 'package:Cook/screens/error_screen.dart';
 import 'package:Cook/screens/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -50,8 +51,17 @@ class TestScreenState extends State<TestScreen> {
   //
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: HomeScreen()
-    );
+    return Scaffold(body: BlocBuilder<RecipesBloc, RecipesState>(
+        builder: (BuildContext context, RecipesState state) {
+      if (state is RecipesListError) {
+        final error = state.error;
+        return ErrorScreen(error.message);
+      }
+      if (state is RecipesLoaded) {
+        List<Recipes> recipes = state.recipes;
+        return HomeScreen();
+      }
+      return CircularProgressIndicator();
+    }));
   }
 }
